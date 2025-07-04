@@ -10,6 +10,7 @@ import lombok.Data;
  */
 @Data
 @Entity
+@Table(name = "users")
 public class User {
 
     /** Unique identifier for each user (auto-generated) */
