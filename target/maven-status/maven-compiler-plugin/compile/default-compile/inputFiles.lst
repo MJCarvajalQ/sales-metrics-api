@@ -1,0 +1,10 @@
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/SalesMetricsApiApplication.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/controllers/OutreachActionController.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/dto/OutreachActionDTO.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/model/ActionType.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/model/OutreachAction.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/model/User.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/repositories/OutreachActionRepository.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/repositories/UserRepository.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/services/OutreachActionService.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/services/OutreachActionServiceImpl.java
