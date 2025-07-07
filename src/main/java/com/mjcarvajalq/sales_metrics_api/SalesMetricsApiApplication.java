@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
 
+// TODO: review with mentor
+
 @SpringBootApplication
 public class SalesMetricsApiApplication {
 
