@@ -27,8 +27,8 @@ public class SalesMetricsApiApplication {
 			user1.setEmail("majo@example.com");
 
 			User user2 = new User();
-			user2.setName("Przemek");
-			user2.setEmail("przemek@example.com");
+			user2.setName("Pedro");
+			user2.setEmail("pedro@example.com");
 
 			userRepo.save(user1);
 			userRepo.save(user2);
