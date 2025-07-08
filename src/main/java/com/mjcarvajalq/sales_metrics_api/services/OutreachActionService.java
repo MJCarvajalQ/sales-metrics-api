@@ -9,4 +9,6 @@ public interface OutreachActionService {
     OutreachAction saveAction (OutreachActionDTO dto);
 
     List<OutreachActionDTO> getAllActions();
+    List<OutreachActionDTO> getActionsByUserId(Long userId);
+
 }
