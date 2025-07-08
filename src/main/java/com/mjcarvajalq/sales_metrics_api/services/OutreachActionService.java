@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface OutreachActionService {
     OutreachAction saveAction (OutreachActionDTO dto);
-    List<OutreachAction> getAllActions();  // Optional: for testing
+
+    List<OutreachActionDTO> getAllActions();
 }

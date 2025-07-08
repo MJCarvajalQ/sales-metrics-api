@@ -26,7 +26,7 @@ public class OutreachActionController {
     }
 
     @GetMapping
-    public List<OutreachAction> listActions(){
+    public List<OutreachActionDTO> listActions(){
         return outreachActionService.getAllActions();
     }
 
