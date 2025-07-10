@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class OutreachActionServiceImpl implements OutreachActionService{
 
-    private OutreachActionRepository outreachActionRepository;
+    private final OutreachActionRepository outreachActionRepository;
     private final UserRepository userRepository;
 
     public OutreachActionServiceImpl(OutreachActionRepository outreachActionRepository, UserRepository userRepository) {
