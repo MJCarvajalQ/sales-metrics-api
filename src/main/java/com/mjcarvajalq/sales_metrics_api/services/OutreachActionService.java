@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface OutreachActionService {
     OutreachAction saveAction (CreateOutreachActionRequest request);
-    List<OutreachAction> getAllActions();  // Optional: for testing
+    List<OutreachActionDTO> getAllActions();
+    List<OutreachActionDTO> getActionsByUserId(Long userId);
 }

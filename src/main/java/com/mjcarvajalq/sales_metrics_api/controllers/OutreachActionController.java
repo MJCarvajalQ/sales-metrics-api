@@ -28,8 +28,12 @@ public class OutreachActionController {
     }
 
     @GetMapping
-    public List<OutreachAction> listActions(){
-        return outreachActionService.getAllActions();
+    public List<OutreachActionDTO> listActions(@RequestParam(required = false) Long userId){
+        if (userId != null) {
+            return outreachActionService.getActionsByUserId(userId);
+        } else {
+            return outreachActionService.getAllActions();
+        }
     }
 
 }

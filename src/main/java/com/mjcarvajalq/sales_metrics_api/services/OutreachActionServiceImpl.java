@@ -37,7 +37,28 @@ public class OutreachActionServiceImpl implements OutreachActionService{
     }
 
     @Override
-    public List<OutreachAction> getAllActions() {
-        return outreachActionRepository.findAll();
+    public List<OutreachActionDTO> getAllActions() {
+        return outreachActionRepository.findAll()
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    @Override
+    public List<OutreachActionDTO> getActionsByUserId(Long userId) {
+        return outreachActionRepository.findByUserId(userId)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
+    private OutreachActionDTO mapToDTO(OutreachAction action) {
+        return new OutreachActionDTO(
+                action.getUser().getId(),
+                action.getType(),
+                action.getDate(),
+                action.getNotes()
+        );
+
     }
 }
