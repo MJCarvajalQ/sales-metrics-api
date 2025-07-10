@@ -1,6 +1,9 @@
 /Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/SalesMetricsApiApplication.java
 /Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/controllers/OutreachActionController.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/dto/CreateOutreachActionRequest.java
 /Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/dto/OutreachActionDTO.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/exceptions/GlobalExceptionHandler.java
+/Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/exceptions/UserNotFoundException.java
 /Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/model/ActionType.java
 /Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/model/OutreachAction.java
 /Users/Majo/src/projects/sales-metrics-api/src/main/java/com/mjcarvajalq/sales_metrics_api/model/User.java
