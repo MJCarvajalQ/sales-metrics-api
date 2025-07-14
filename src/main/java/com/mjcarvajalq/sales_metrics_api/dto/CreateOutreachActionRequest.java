@@ -1,7 +1,10 @@
 package com.mjcarvajalq.sales_metrics_api.dto;
 
 import com.mjcarvajalq.sales_metrics_api.model.ActionType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
@@ -12,6 +15,9 @@ import java.time.LocalDate;
  * This separates the API contract from the internal data model.
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateOutreachActionRequest {
     
     @NotNull(message = "User ID is required")

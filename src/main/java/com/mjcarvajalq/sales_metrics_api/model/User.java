@@ -2,13 +2,19 @@ package com.mjcarvajalq.sales_metrics_api.model;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Represents a user of the system who performs outreach actions.
  * For example: Maria sending prospecting messages to clients.
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {

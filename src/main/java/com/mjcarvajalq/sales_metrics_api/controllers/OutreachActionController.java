@@ -4,6 +4,8 @@ import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
 import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
 import com.mjcarvajalq.sales_metrics_api.services.OutreachActionService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
@@ -13,13 +15,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/actions")
+@RequiredArgsConstructor
+@Slf4j
 public class OutreachActionController {
 
     private final OutreachActionService outreachActionService;
-
-    public OutreachActionController(OutreachActionService outreachActionService){
-        this.outreachActionService = outreachActionService;
-    }
 
     @PostMapping
     public ResponseEntity<OutreachAction> createAction(@Valid @RequestBody CreateOutreachActionRequest request){
