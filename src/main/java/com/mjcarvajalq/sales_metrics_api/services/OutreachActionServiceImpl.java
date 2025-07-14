@@ -1,6 +1,7 @@
 package com.mjcarvajalq.sales_metrics_api.services;
 
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
+import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionResponse;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
 import com.mjcarvajalq.sales_metrics_api.exceptions.UserNotFoundException;
 import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
@@ -22,7 +23,7 @@ public class OutreachActionServiceImpl implements OutreachActionService{
     private final UserRepository userRepository;
 
     @Override
-    public OutreachAction saveAction(CreateOutreachActionRequest request) {
+    public CreateOutreachActionResponse saveAction(CreateOutreachActionRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(request.getUserId()));
 
@@ -33,7 +34,9 @@ public class OutreachActionServiceImpl implements OutreachActionService{
                 .user(user)
                 .build();
 
-        return outreachActionRepository.save(action);
+        OutreachAction savedAction = outreachActionRepository.save(action);
+        
+        return mapToCreateResponse(savedAction);
     }
 
     @Override
@@ -58,6 +61,18 @@ public class OutreachActionServiceImpl implements OutreachActionService{
                 .type(action.getType())
                 .date(action.getDate())
                 .notes(action.getNotes())
+                .build();
+    }
+    
+    private CreateOutreachActionResponse mapToCreateResponse(OutreachAction action) {
+        return CreateOutreachActionResponse.builder()
+                .id(action.getId())
+                .userId(action.getUser().getId())
+                .userName(action.getUser().getName())
+                .type(action.getType())
+                .date(action.getDate())
+                .notes(action.getNotes())
+                .message("Outreach action created successfully")
                 .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.mjcarvajalq.sales_metrics_api.controllers;
 
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
+import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionResponse;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
 import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
 import com.mjcarvajalq.sales_metrics_api.services.OutreachActionService;
@@ -22,9 +23,11 @@ public class OutreachActionController {
     private final OutreachActionService outreachActionService;
 
     @PostMapping
-    public ResponseEntity<OutreachAction> createAction(@Valid @RequestBody CreateOutreachActionRequest request){
-        OutreachAction saved = outreachActionService.saveAction(request);
-        return ResponseEntity.ok(saved);
+    public ResponseEntity<CreateOutreachActionResponse> createAction(@Valid @RequestBody CreateOutreachActionRequest request){
+        log.info("Creating outreach action for user: {}", request.getUserId());
+        CreateOutreachActionResponse response = outreachActionService.saveAction(request);
+        log.info("Successfully created outreach action with ID: {}", response.getId());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping
