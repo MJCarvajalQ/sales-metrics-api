@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -16,7 +16,7 @@ public class OutreachActionDTO {
 
     private Long userId; // To associate this action with a user
     private ActionType type;
-    private LocalDate date;
+    private LocalDateTime date;
     private String notes;
 
 }

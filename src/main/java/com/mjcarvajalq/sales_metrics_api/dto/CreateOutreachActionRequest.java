@@ -1,14 +1,13 @@
 package com.mjcarvajalq.sales_metrics_api.dto;
 
 import com.mjcarvajalq.sales_metrics_api.model.ActionType;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Request DTO for creating a new outreach action.
@@ -27,7 +26,7 @@ public class CreateOutreachActionRequest {
     private ActionType type;
     
     @NotNull(message = "Date is required")
-    private LocalDate date;
+    private LocalDateTime date;
     
     private String notes; // Optional field
 }

@@ -3,13 +3,13 @@ package com.mjcarvajalq.sales_metrics_api.controllers;
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionResponse;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
-import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
+import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDetailResponse;
 import com.mjcarvajalq.sales_metrics_api.services.OutreachActionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -37,6 +37,13 @@ public class OutreachActionController {
         } else {
             return outreachActionService.getAllActions();
         }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OutreachActionDetailResponse> getActionById(@PathVariable Long id) {
+        log.info("Fetching outreach action with ID: {}", id);
+        OutreachActionDetailResponse response = outreachActionService.getActionById(id);
+        return ResponseEntity.ok(response);
     }
 
 }

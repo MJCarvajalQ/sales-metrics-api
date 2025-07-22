@@ -10,7 +10,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @SpringBootApplication
 public class SalesMetricsApiApplication {
@@ -36,13 +36,13 @@ public class SalesMetricsApiApplication {
 			OutreachAction action1 = new OutreachAction();
 			action1.setUser(user1);
 			action1.setType(ActionType.EMAIL);
-			action1.setDate(LocalDate.now().minusDays(1));
+			action1.setDate(LocalDateTime.now().minusDays(1));
 			action1.setNotes("Sent introduction email");
 
 			OutreachAction action2 = new OutreachAction();
 			action2.setUser(user1);
 			action2.setType(ActionType.MEETING);
-			action2.setDate(LocalDate.now());
+			action2.setDate(LocalDateTime.now());
 			action2.setNotes("Scheduled Zoom meeting");
 
 			actionRepo.save(action1);

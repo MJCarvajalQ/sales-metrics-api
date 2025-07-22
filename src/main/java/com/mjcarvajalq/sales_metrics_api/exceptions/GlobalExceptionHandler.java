@@ -1,5 +1,6 @@
 package com.mjcarvajalq.sales_metrics_api.exceptions;
 
+import lombok.Builder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -60,9 +61,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
+    @ExceptionHandler(OutreachActionNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleOutreachActionNotFound(OutreachActionNotFoundException ex){
+        ErrorResponse error = ErrorResponse.builder()
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+
     /**
      * Standard error response format
      */
+    @Builder
     public static class ErrorResponse {
         private int status;
         private String error;

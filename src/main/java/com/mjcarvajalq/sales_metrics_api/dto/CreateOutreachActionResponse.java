@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Response DTO for outreach action creation.
@@ -22,7 +22,7 @@ public class CreateOutreachActionResponse {
     private Long userId;
     private String userName;
     private ActionType type;
-    private LocalDate date;
+    private LocalDateTime date;
     private String notes;
     private String message;
     

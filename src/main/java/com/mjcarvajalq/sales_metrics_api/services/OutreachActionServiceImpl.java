@@ -3,7 +3,10 @@ package com.mjcarvajalq.sales_metrics_api.services;
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionResponse;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
+import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDetailResponse;
+import com.mjcarvajalq.sales_metrics_api.exceptions.OutreachActionNotFoundException;
 import com.mjcarvajalq.sales_metrics_api.exceptions.UserNotFoundException;
+import com.mjcarvajalq.sales_metrics_api.model.ActionType;
 import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
 import com.mjcarvajalq.sales_metrics_api.model.User;
 import com.mjcarvajalq.sales_metrics_api.repositories.OutreachActionRepository;
@@ -12,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -27,9 +31,13 @@ public class OutreachActionServiceImpl implements OutreachActionService{
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(request.getUserId()));
 
+        ActionType actionType = request.getType();
+
+        LocalDateTime actionDate = request.getDate();
+
         OutreachAction action = OutreachAction.builder()
-                .type(request.getType())
-                .date(request.getDate())
+                .type(actionType)
+                .date(actionDate)
                 .notes(request.getNotes())
                 .user(user)
                 .build();
@@ -55,6 +63,15 @@ public class OutreachActionServiceImpl implements OutreachActionService{
                 .toList();
     }
 
+    @Override
+    public OutreachActionDetailResponse getActionById(Long id){
+        OutreachAction action = outreachActionRepository.findById(id)
+                .orElseThrow(() -> new OutreachActionNotFoundException(id));
+        return mapToDetailResponse(action);
+    }
+
+
+
     private OutreachActionDTO mapToDTO(OutreachAction action) {
         return OutreachActionDTO.builder()
                 .userId(action.getUser().getId())
@@ -75,4 +92,17 @@ public class OutreachActionServiceImpl implements OutreachActionService{
                 .message("Outreach action created successfully")
                 .build();
     }
+
+    private OutreachActionDetailResponse mapToDetailResponse(OutreachAction action) {
+        return OutreachActionDetailResponse.builder()
+                .id(action.getId())
+                .userId(action.getUser().getId())
+                .userName(action.getUser().getName())
+                .type(action.getType().name())
+                .date(action.getDate())
+                .notes(action.getNotes())
+                .build();
+
+    }
+
 }
