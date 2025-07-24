@@ -3,6 +3,7 @@ package com.mjcarvajalq.sales_metrics_api.services;
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
 import com.mjcarvajalq.sales_metrics_api.exceptions.UserNotFoundException;
+import com.mjcarvajalq.sales_metrics_api.mappers.OutreachActionMapper;
 import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
 import com.mjcarvajalq.sales_metrics_api.model.User;
 import com.mjcarvajalq.sales_metrics_api.repositories.OutreachActionRepository;
@@ -20,6 +21,7 @@ public class OutreachActionServiceImpl implements OutreachActionService{
 
     private final OutreachActionRepository outreachActionRepository;
     private final UserRepository userRepository;
+    private final OutreachActionMapper outreachActionMapper;
 
     @Override
     public OutreachAction saveAction(CreateOutreachActionRequest request) {
@@ -40,7 +42,7 @@ public class OutreachActionServiceImpl implements OutreachActionService{
     public List<OutreachActionDTO> getAllActions() {
         return outreachActionRepository.findAll()
                 .stream()
-                .map(this::mapToDTO)
+                .map(outreachActionMapper::toDTO)
                 .toList();
     }
 
@@ -48,16 +50,7 @@ public class OutreachActionServiceImpl implements OutreachActionService{
     public List<OutreachActionDTO> getActionsByUserId(Long userId) {
         return outreachActionRepository.findByUserId(userId)
                 .stream()
-                .map(this::mapToDTO)
+                .map(outreachActionMapper::toDTO)
                 .toList();
-    }
-
-    private OutreachActionDTO mapToDTO(OutreachAction action) {
-        return OutreachActionDTO.builder()
-                .userId(action.getUser().getId())
-                .type(action.getType())
-                .date(action.getDate())
-                .notes(action.getNotes())
-                .build();
     }
 }
