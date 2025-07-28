@@ -28,12 +28,7 @@ public class OutreachActionServiceImpl implements OutreachActionService{
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(request.getUserId()));
 
-        OutreachAction action = OutreachAction.builder()
-                .type(request.getType())
-                .date(request.getDate())
-                .notes(request.getNotes())
-                .user(user)
-                .build();
+        OutreachAction action = outreachActionMapper.toEntity(request, user);
 
         return outreachActionRepository.save(action);
     }

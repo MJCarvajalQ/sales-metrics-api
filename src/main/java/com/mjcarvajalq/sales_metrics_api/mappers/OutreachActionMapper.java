@@ -1,7 +1,9 @@
 package com.mjcarvajalq.sales_metrics_api.mappers;
 
+import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
 import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
+import com.mjcarvajalq.sales_metrics_api.model.User;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,14 +16,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OutreachActionMapper {
-
-    /**
-     * Converts an OutreachAction entity to its corresponding DTO.
-     * 
-     * @param action the OutreachAction entity to convert
-     * @return OutreachActionDTO containing the mapped data
-     * @throws IllegalArgumentException if action is null
-     */
     public OutreachActionDTO toDTO(OutreachAction action) {
         if (action == null) {
             throw new IllegalArgumentException("OutreachAction cannot be null");
@@ -32,6 +26,22 @@ public class OutreachActionMapper {
                 .type(action.getType())
                 .date(action.getDate())
                 .notes(action.getNotes())
+                .build();
+    }
+
+    public OutreachAction toEntity(CreateOutreachActionRequest request, User user) {
+        if (request == null) {
+            throw new IllegalArgumentException("CreateOutreachActionRequest cannot be null");
+        }
+        if (user == null) {
+            throw  new IllegalArgumentException("User cannot be null");
+        }
+
+        return OutreachAction.builder()
+                .type(request.getType())
+                .date(request.getDate())
+                .notes(request.getNotes())
+                .user(user)
                 .build();
     }
 }
