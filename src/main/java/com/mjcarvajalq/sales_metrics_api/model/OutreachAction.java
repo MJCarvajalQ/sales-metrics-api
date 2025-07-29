@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -26,7 +26,7 @@ public class OutreachAction {
     private ActionType type;
 
     /** Date when the action was performed */
-    private LocalDate date;
+    private LocalDateTime date;
 
     /** Additional notes, such as "client asked to follow up next week" */
     private String notes;

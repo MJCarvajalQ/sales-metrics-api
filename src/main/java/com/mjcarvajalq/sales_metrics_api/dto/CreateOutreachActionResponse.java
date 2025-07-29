@@ -8,15 +8,22 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/**
+ * Response DTO for outreach action creation.
+ * This provides a clean API response without exposing internal entity structure.
+ */
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class OutreachActionDTO {
-
-    private Long userId; // To associate this action with a user
+@AllArgsConstructor
+public class CreateOutreachActionResponse {
+    
+    private Long id;
+    private Long userId;
+    private String userName;
     private ActionType type;
     private LocalDateTime date;
     private String notes;
-
+    private String message;
+    
 }

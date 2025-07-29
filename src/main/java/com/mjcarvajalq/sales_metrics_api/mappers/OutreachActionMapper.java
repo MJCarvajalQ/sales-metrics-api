@@ -1,7 +1,9 @@
 package com.mjcarvajalq.sales_metrics_api.mappers;
 
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
+import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionResponse;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
+import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDetailResponse;
 import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
 import com.mjcarvajalq.sales_metrics_api.model.User;
 import org.springframework.stereotype.Component;
@@ -24,7 +26,7 @@ public class OutreachActionMapper {
         return OutreachActionDTO.builder()
                 .userId(action.getUser().getId())
                 .type(action.getType())
-                .date(action.getDate())
+                .dateTime(action.getDateTime())
                 .notes(action.getNotes())
                 .build();
     }
@@ -39,9 +41,42 @@ public class OutreachActionMapper {
 
         return OutreachAction.builder()
                 .type(request.getType())
-                .date(request.getDate())
+                .dateTime(request.getDateTime())
                 .notes(request.getNotes())
                 .user(user)
                 .build();
     }
+
+    public OutreachActionDetailResponse mapToDetailResponse(OutreachAction action) {
+        if (action == null){
+            throw new IllegalArgumentException("OutreachAction cannot be null");
+        }
+        return OutreachActionDetailResponse.builder()
+                .id(action.getId())
+                .userId(action.getUser().getId())
+                .userName(action.getUser().getName())
+                .type(action.getType().name())
+                .dateTime(action.getDateTime())
+                .notes(action.getNotes())
+                .build();
+
+    }
+
+    public CreateOutreachActionResponse mapToCreateResponse(OutreachAction action) {
+        if (action == null) {
+            throw new IllegalArgumentException("Outreach action cannot be null");
+        }
+
+        return CreateOutreachActionResponse.builder()
+                .id(action.getId())
+                .userId(action.getUser().getId())
+                .userName(action.getUser().getName())
+                .type(action.getType())
+                .dateTime(action.getDateTime())
+                .notes(action.getNotes())
+                .message("Outreach action created successfully")
+                .build();
+
+    }
+
 }
