@@ -22,7 +22,7 @@ public class CreateOutreachActionResponse {
     private Long userId;
     private String userName;
     private ActionType type;
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
     private String notes;
     private String message;
     

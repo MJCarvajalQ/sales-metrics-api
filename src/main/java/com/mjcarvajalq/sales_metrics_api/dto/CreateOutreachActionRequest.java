@@ -26,7 +26,7 @@ public class CreateOutreachActionRequest {
     private ActionType type;
     
     @NotNull(message = "Date is required")
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
     
     private String notes; // Optional field
 }

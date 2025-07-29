@@ -36,13 +36,13 @@ public class SalesMetricsApiApplication {
 			OutreachAction action1 = new OutreachAction();
 			action1.setUser(user1);
 			action1.setType(ActionType.EMAIL);
-			action1.setDate(LocalDateTime.now().minusDays(1));
+			action1.setDateTime(LocalDateTime.now().minusDays(1));
 			action1.setNotes("Sent introduction email");
 
 			OutreachAction action2 = new OutreachAction();
 			action2.setUser(user1);
 			action2.setType(ActionType.MEETING);
-			action2.setDate(LocalDateTime.now());
+			action2.setDateTime(LocalDateTime.now());
 			action2.setNotes("Scheduled Zoom meeting");
 
 			actionRepo.save(action1);

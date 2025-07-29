@@ -13,7 +13,7 @@ public class OutreachActionDetailResponse {
     private Long userId;
     private String userName;
     private String type;
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
     private String notes;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

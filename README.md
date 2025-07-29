@@ -65,7 +65,7 @@ This application allows users to track their sales outreach activities (emails, 
 - id (Long, auto-generated)
 - user_id (Foreign key to Users)
 - type (Enum: EMAIL, CONNECTION, RESPONSE, MEETING)
-- date (LocalDate)
+- dateTime (LocalDateTime)
 - notes (String)
 
 ## Setup Instructions
@@ -109,7 +109,7 @@ curl -X POST http://localhost:8080/api/actions \
   -d '{
     "userId": 1,
     "type": "EMAIL",
-    "date": "2025-07-04",
+    "dateTime": "2025-07-04T10:30:00",
     "notes": "Follow-up email sent to prospect"
   }'
 ```
@@ -125,7 +125,7 @@ curl -X POST http://localhost:8080/api/actions \
     "email": "majo@example.com"
   },
   "type": "EMAIL",
-  "date": "2025-07-04",
+  "dateTime": "2025-07-04T10:30:00",
   "notes": "Follow-up email sent to prospect"
 }
 ```
@@ -153,13 +153,13 @@ Returns only the actions performed by the user with ID `1`.
   {
     "userId": 1,
     "type": "EMAIL",
-    "date": "2025-07-08",
+    "dateTime": "2025-07-08T09:15:00",
     "notes": "Initial outreach"
   },
   {
     "userId": 1,
     "type": "MEETING",
-    "date": "2025-07-09",
+    "dateTime": "2025-07-09T14:00:00",
     "notes": "Demo scheduled"
   }
 ]

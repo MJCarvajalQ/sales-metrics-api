@@ -33,11 +33,11 @@ public class OutreachActionServiceImpl implements OutreachActionService{
 
         ActionType actionType = request.getType();
 
-        LocalDateTime actionDate = request.getDate();
+        LocalDateTime actionDate = request.getDateTime();
 
         OutreachAction action = OutreachAction.builder()
                 .type(actionType)
-                .date(actionDate)
+                .dateTime(actionDate)
                 .notes(request.getNotes())
                 .user(user)
                 .build();
@@ -76,7 +76,7 @@ public class OutreachActionServiceImpl implements OutreachActionService{
         return OutreachActionDTO.builder()
                 .userId(action.getUser().getId())
                 .type(action.getType())
-                .date(action.getDate())
+                .dateTime(action.getDateTime())
                 .notes(action.getNotes())
                 .build();
     }
@@ -87,7 +87,7 @@ public class OutreachActionServiceImpl implements OutreachActionService{
                 .userId(action.getUser().getId())
                 .userName(action.getUser().getName())
                 .type(action.getType())
-                .date(action.getDate())
+                .dateTime(action.getDateTime())
                 .notes(action.getNotes())
                 .message("Outreach action created successfully")
                 .build();
@@ -99,7 +99,7 @@ public class OutreachActionServiceImpl implements OutreachActionService{
                 .userId(action.getUser().getId())
                 .userName(action.getUser().getName())
                 .type(action.getType().name())
-                .date(action.getDate())
+                .dateTime(action.getDateTime())
                 .notes(action.getNotes())
                 .build();
 

@@ -16,7 +16,7 @@ public class OutreachActionDTO {
 
     private Long userId; // To associate this action with a user
     private ActionType type;
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
     private String notes;
 
 }

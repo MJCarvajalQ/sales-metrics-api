@@ -26,7 +26,7 @@ public class OutreachAction {
     private ActionType type;
 
     /** Date when the action was performed */
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
 
     /** Additional notes, such as "client asked to follow up next week" */
     private String notes;
