@@ -31,12 +31,9 @@ public class OutreachActionController {
     }
 
     @GetMapping
-    public List<OutreachActionDTO> listActions(@RequestParam(required = false) Long userId){
-        if (userId != null) {
-            return outreachActionService.getActionsByUserId(userId);
-        } else {
-            return outreachActionService.getAllActions();
-        }
+    public ResponseEntity<List<OutreachActionDTO>> getAllActions() {
+        List<OutreachActionDTO> actions = outreachActionService.getAllActions();
+        return ResponseEntity.ok(actions);
     }
 
     @GetMapping("/{id}")

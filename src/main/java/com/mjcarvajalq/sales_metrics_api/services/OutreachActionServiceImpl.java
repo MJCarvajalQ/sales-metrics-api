@@ -6,6 +6,7 @@ import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDetailResponse;
 import com.mjcarvajalq.sales_metrics_api.exceptions.OutreachActionNotFoundException;
 import com.mjcarvajalq.sales_metrics_api.exceptions.UserNotFoundException;
+import com.mjcarvajalq.sales_metrics_api.mappers.OutreachActionMapper;
 import com.mjcarvajalq.sales_metrics_api.model.ActionType;
 import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
 import com.mjcarvajalq.sales_metrics_api.model.User;
@@ -25,33 +26,25 @@ public class OutreachActionServiceImpl implements OutreachActionService{
 
     private final OutreachActionRepository outreachActionRepository;
     private final UserRepository userRepository;
+    private final OutreachActionMapper outreachActionMapper;
 
     @Override
     public CreateOutreachActionResponse saveAction(CreateOutreachActionRequest request) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(request.getUserId()));
 
-        ActionType actionType = request.getType();
-
-        LocalDateTime actionDate = request.getDateTime();
-
-        OutreachAction action = OutreachAction.builder()
-                .type(actionType)
-                .dateTime(actionDate)
-                .notes(request.getNotes())
-                .user(user)
-                .build();
+        OutreachAction action = outreachActionMapper.toEntity(request, user);
 
         OutreachAction savedAction = outreachActionRepository.save(action);
         
-        return mapToCreateResponse(savedAction);
+        return outreachActionMapper.mapToCreateResponse(savedAction);
     }
 
     @Override
     public List<OutreachActionDTO> getAllActions() {
         return outreachActionRepository.findAll()
                 .stream()
-                .map(this::mapToDTO)
+                .map(outreachActionMapper::toDTO)
                 .toList();
     }
 
@@ -59,50 +52,13 @@ public class OutreachActionServiceImpl implements OutreachActionService{
     public List<OutreachActionDTO> getActionsByUserId(Long userId) {
         return outreachActionRepository.findByUserId(userId)
                 .stream()
-                .map(this::mapToDTO)
+                .map(outreachActionMapper::toDTO)
                 .toList();
     }
-
     @Override
     public OutreachActionDetailResponse getActionById(Long id){
         OutreachAction action = outreachActionRepository.findById(id)
                 .orElseThrow(() -> new OutreachActionNotFoundException(id));
-        return mapToDetailResponse(action);
+        return outreachActionMapper.mapToDetailResponse(action);
     }
-
-
-
-    private OutreachActionDTO mapToDTO(OutreachAction action) {
-        return OutreachActionDTO.builder()
-                .userId(action.getUser().getId())
-                .type(action.getType())
-                .dateTime(action.getDateTime())
-                .notes(action.getNotes())
-                .build();
-    }
-    
-    private CreateOutreachActionResponse mapToCreateResponse(OutreachAction action) {
-        return CreateOutreachActionResponse.builder()
-                .id(action.getId())
-                .userId(action.getUser().getId())
-                .userName(action.getUser().getName())
-                .type(action.getType())
-                .dateTime(action.getDateTime())
-                .notes(action.getNotes())
-                .message("Outreach action created successfully")
-                .build();
-    }
-
-    private OutreachActionDetailResponse mapToDetailResponse(OutreachAction action) {
-        return OutreachActionDetailResponse.builder()
-                .id(action.getId())
-                .userId(action.getUser().getId())
-                .userName(action.getUser().getName())
-                .type(action.getType().name())
-                .dateTime(action.getDateTime())
-                .notes(action.getNotes())
-                .build();
-
-    }
-
 }
