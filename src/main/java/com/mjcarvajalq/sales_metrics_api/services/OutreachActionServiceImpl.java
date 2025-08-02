@@ -1,5 +1,4 @@
 package com.mjcarvajalq.sales_metrics_api.services;
-
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionResponse;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
@@ -7,7 +6,6 @@ import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDetailResponse;
 import com.mjcarvajalq.sales_metrics_api.exceptions.OutreachActionNotFoundException;
 import com.mjcarvajalq.sales_metrics_api.exceptions.UserNotFoundException;
 import com.mjcarvajalq.sales_metrics_api.mappers.OutreachActionMapper;
-import com.mjcarvajalq.sales_metrics_api.model.ActionType;
 import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
 import com.mjcarvajalq.sales_metrics_api.model.User;
 import com.mjcarvajalq.sales_metrics_api.repositories.OutreachActionRepository;
@@ -15,8 +13,6 @@ import com.mjcarvajalq.sales_metrics_api.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,6 +26,10 @@ public class OutreachActionServiceImpl implements OutreachActionService{
 
     @Override
     public CreateOutreachActionResponse saveAction(CreateOutreachActionRequest request) {
+        if (request == null) {
+            throw new IllegalArgumentException("CreateOutreachActionRequest cannot be null");
+        }
+
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(request.getUserId()));
 
@@ -42,18 +42,14 @@ public class OutreachActionServiceImpl implements OutreachActionService{
 
     @Override
     public List<OutreachActionDTO> getAllActions() {
-        return outreachActionRepository.findAll()
-                .stream()
-                .map(outreachActionMapper::toDTO)
-                .toList();
+        List<OutreachAction> actions = outreachActionRepository.findAll();
+        return outreachActionMapper.toDTOList(actions);
     }
 
     @Override
     public List<OutreachActionDTO> getActionsByUserId(Long userId) {
-        return outreachActionRepository.findByUserId(userId)
-                .stream()
-                .map(outreachActionMapper::toDTO)
-                .toList();
+        List<OutreachAction> actions = outreachActionRepository.findByUserId(userId);
+        return outreachActionMapper.toDTOList(actions);
     }
     @Override
     public OutreachActionDetailResponse getActionById(Long id){
