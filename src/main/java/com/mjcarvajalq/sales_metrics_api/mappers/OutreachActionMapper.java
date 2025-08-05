@@ -2,7 +2,7 @@ package com.mjcarvajalq.sales_metrics_api.mappers;
 
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionResponse;
-import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
+import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionResponse;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDetailResponse;
 import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
 import com.mjcarvajalq.sales_metrics_api.model.User;
@@ -16,9 +16,7 @@ import java.util.List;
 public interface OutreachActionMapper {
 
     @Mapping(target = "userId", source = "user.id")
-    OutreachActionDTO toDTO(OutreachAction entity);
-
-    List<OutreachActionDTO> toDTOList(List<OutreachAction> entities);
+    OutreachActionResponse toResponse(OutreachAction entity);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", source = "user")
