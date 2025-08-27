@@ -12,30 +12,20 @@ import org.mapstruct.Mapping;
 import java.util.List;
 
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface OutreachActionMapper {
 
-    @Mapping(target = "userId", source = "user.id")
     OutreachActionDTO toDTO(OutreachAction entity);
 
     List<OutreachActionDTO> toDTOList(List<OutreachAction> entities);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", source = "user")
     @Mapping(target = "dateTime", source = "request.dateTime")
     OutreachAction toEntity(CreateOutreachActionRequest request, User user);
 
-
-    @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "userName", source = "user.name")
     @Mapping(target = "type", expression = "java(entity.getType().name())")
-    @Mapping(target = "dateTime", source = "entity.dateTime")
     OutreachActionDetailResponse mapToDetailResponse(OutreachAction entity);
 
-
-    @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "userName", source = "user.name")
-    @Mapping(target = "dateTime", source = "entity.dateTime")
     @Mapping(target = "message", constant = "Outreach action created successfully")
     CreateOutreachActionResponse mapToCreateResponse(OutreachAction entity);
 
