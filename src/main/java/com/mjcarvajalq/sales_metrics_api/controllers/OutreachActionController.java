@@ -2,7 +2,7 @@ package com.mjcarvajalq.sales_metrics_api.controllers;
 
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionResponse;
-import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
+import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionResponse;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDetailResponse;
 import com.mjcarvajalq.sales_metrics_api.services.OutreachActionService;
 import jakarta.validation.Valid;
@@ -31,8 +31,8 @@ public class OutreachActionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OutreachActionDTO>> getAllActions() {
-        List<OutreachActionDTO> actions = outreachActionService.getAllActions();
+    public ResponseEntity<List<OutreachActionResponse>> getAllActions() {
+        List<OutreachActionResponse> actions = outreachActionService.getAllActions();
         return ResponseEntity.ok(actions);
     }
 

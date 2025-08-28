@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OutreachActionDTO {
+public class OutreachActionResponse {
 
     private Long userId; // To associate this action with a user
     private ActionType type;

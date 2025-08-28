@@ -1,7 +1,8 @@
 package com.mjcarvajalq.sales_metrics_api.services;
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionResponse;
-import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
+import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionResponse;
+import java.util.stream.Collectors;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDetailResponse;
 import com.mjcarvajalq.sales_metrics_api.exceptions.OutreachActionNotFoundException;
 import com.mjcarvajalq.sales_metrics_api.exceptions.UserNotFoundException;
@@ -41,15 +42,19 @@ public class OutreachActionServiceImpl implements OutreachActionService{
     }
 
     @Override
-    public List<OutreachActionDTO> getAllActions() {
+    public List<OutreachActionResponse> getAllActions() {
         List<OutreachAction> actions = outreachActionRepository.findAll();
-        return outreachActionMapper.toDTOList(actions);
+        return actions.stream()
+                      .map(outreachActionMapper::toResponse)
+                      .collect(Collectors.toList());
     }
 
     @Override
-    public List<OutreachActionDTO> getActionsByUserId(Long userId) {
+    public List<OutreachActionResponse> getActionsByUserId(Long userId) {
         List<OutreachAction> actions = outreachActionRepository.findByUserId(userId);
-        return outreachActionMapper.toDTOList(actions);
+        return actions.stream()
+                      .map(outreachActionMapper::toResponse)
+                      .collect(Collectors.toList());
     }
     @Override
     public OutreachActionDetailResponse getActionById(Long id){
