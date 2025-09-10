@@ -1,140 +1,316 @@
-# Sample Migration Scripts
+# Sample Liquibase Changelogs
 
 ## Overview
-This document contains sample Flyway migration scripts for the Sales Metrics API, reflecting the current project structure with improved Response pattern.
+This document contains sample Liquibase changelog files for the Sales Metrics API, reflecting the current project structure with improved Response pattern.
 
-## Migration File Structure
+## Changelog File Structure
 
 ```
-src/main/resources/db/migration/
-├── V1__Create_users_table.sql
-├── V2__Create_outreach_actions_table.sql
-├── V3__Insert_sample_users.sql
-├── V4__Insert_sample_outreach_actions.sql
-└── V5__Add_indexes_for_performance.sql
+src/main/resources/db/changelog/
+├── db.changelog-master.yaml
+├── changesets/
+    ├── 0001-create-users-table.yaml
+    ├── 0002-create-outreach-actions-table.yaml
+    ├── 0003-insert-sample-users.yaml
+    ├── 0004-insert-sample-outreach-actions.yaml
+    └── 0005-add-indexes-for-performance.yaml
 ```
 
-## Migration Scripts
+## Changelogs
 
-### V1__Create_users_table.sql
-```sql
--- Create users table
--- This table stores user information for the sales metrics system
-
-CREATE TABLE users (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Add comment to table
-COMMENT ON TABLE users IS 'Stores user information for sales outreach tracking';
-COMMENT ON COLUMN users.id IS 'Unique identifier for each user';
-COMMENT ON COLUMN users.name IS 'Full name of the user';
-COMMENT ON COLUMN users.email IS 'Email address (must be unique)';
-COMMENT ON COLUMN users.created_at IS 'Timestamp when user was created';
-COMMENT ON COLUMN users.updated_at IS 'Timestamp when user was last updated';
+### db.changelog-master.yaml
+```yaml
+databaseChangeLog:
+  - include:
+      file: db/changelog/changesets/0001-create-users-table.yaml
+  - include:
+      file: db/changelog/changesets/0002-create-outreach-actions-table.yaml
+  - include:
+      file: db/changelog/changesets/0003-insert-sample-users.yaml
+  - include:
+      file: db/changelog/changesets/0004-insert-sample-outreach-actions.yaml
+  - include:
+      file: db/changelog/changesets/0005-add-indexes-for-performance.yaml
 ```
 
-### V2__Create_outreach_actions_table.sql
-```sql
--- Create outreach_action table
--- This table stores all outreach activities performed by users
-
-CREATE TABLE outreach_action (
-    id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    type VARCHAR(50) NOT NULL CHECK (type IN ('EMAIL', 'CONNECTION', 'RESPONSE', 'MEETING')),
-    date_time TIMESTAMP NOT NULL,
-    notes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    -- Foreign key constraint
-    CONSTRAINT fk_outreach_action_user 
-        FOREIGN KEY (user_id) 
-        REFERENCES users(id) 
-        ON DELETE CASCADE
-);
-
--- Add comments to table
-COMMENT ON TABLE outreach_action IS 'Stores outreach activities performed by users';
-COMMENT ON COLUMN outreach_action.id IS 'Unique identifier for each outreach action';
-COMMENT ON COLUMN outreach_action.user_id IS 'Reference to the user who performed the action';
-COMMENT ON COLUMN outreach_action.type IS 'Type of outreach action (EMAIL, CONNECTION, RESPONSE, MEETING)';
-COMMENT ON COLUMN outreach_action.date_time IS 'When the outreach action was performed';
-COMMENT ON COLUMN outreach_action.notes IS 'Additional notes about the outreach action';
-COMMENT ON COLUMN outreach_action.created_at IS 'Timestamp when record was created';
-COMMENT ON COLUMN outreach_action.updated_at IS 'Timestamp when record was last updated';
+### 0001-create-users-table.yaml
+```yaml
+databaseChangeLog:
+  - changeSet:
+      id: 0001
+      author: majo
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        - addRemarks:
+            tableName: users
+            remarks: Stores user information for sales outreach tracking
+      rollback:
+        - dropTable:
+            tableName: users
 ```
 
-### V3__Insert_sample_users.sql
-```sql
--- Insert sample users for development/testing
--- This data supports the current API structure with OutreachActionResponse
-
-INSERT INTO users (name, email) VALUES 
-    ('Majo', 'majo@example.com'),
-    ('Pedro', 'pedro@example.com'),
-    ('Ana', 'ana@example.com');
-
--- Add more sample users for testing various scenarios
-INSERT INTO users (name, email) VALUES 
-    ('Carlos Martinez', 'carlos.martinez@example.com'),
-    ('Sofia Rodriguez', 'sofia.rodriguez@example.com');
+### 0002-create-outreach-actions-table.yaml
+```yaml
+databaseChangeLog:
+  - changeSet:
+      id: 0002
+      author: majo
+      changes:
+        - createTable:
+            tableName: outreach_action
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: notes
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        - addForeignKeyConstraint:
+            baseTableName: outreach_action
+            baseColumnNames: user_id
+            constraintName: fk_outreach_action_user
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addCheckConstraint:
+            tableName: outreach_action
+            constraintName: ck_outreach_action_type
+            checkConstraint: "type IN ('EMAIL','CONNECTION','RESPONSE','MEETING')"
+      rollback:
+        - dropTable:
+            tableName: outreach_action
 ```
 
-### V4__Insert_sample_outreach_actions.sql
-```sql
--- Insert sample outreach actions
--- This data will be returned via OutreachActionResponse in the API
-
-INSERT INTO outreach_action (user_id, type, date_time, notes) VALUES 
-    -- Majo's actions
-    (1, 'EMAIL', '2025-01-01 09:00:00', 'Initial outreach to prospect ABC Corp'),
-    (1, 'CONNECTION', '2025-01-02 14:30:00', 'Connected on LinkedIn with decision maker'),
-    (1, 'RESPONSE', '2025-01-03 11:15:00', 'Received positive response, scheduling meeting'),
-    (1, 'MEETING', '2025-01-04 15:00:00', 'Demo call completed successfully'),
-    
-    -- Pedro's actions
-    (2, 'EMAIL', '2025-01-01 10:00:00', 'Follow-up email to XYZ Inc'),
-    (2, 'EMAIL', '2025-01-02 16:00:00', 'Second follow-up with pricing information'),
-    (2, 'MEETING', '2025-01-05 13:00:00', 'Discovery call scheduled'),
-    
-    -- Ana's actions
-    (3, 'CONNECTION', '2025-01-01 08:30:00', 'LinkedIn outreach to startup founder'),
-    (3, 'EMAIL', '2025-01-02 09:45:00', 'Introductory email with company overview'),
-    (3, 'RESPONSE', '2025-01-03 12:00:00', 'Prospect showed interest in our solution');
+### 0003-insert-sample-users.yaml
+```yaml
+databaseChangeLog:
+  - changeSet:
+      id: 0003
+      author: majo
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: name, value: "Majo" }
+              - column: { name: email, value: "majo@example.com" }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: name, value: "Pedro" }
+              - column: { name: email, value: "pedro@example.com" }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: name, value: "Ana" }
+              - column: { name: email, value: "ana@example.com" }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: name, value: "Carlos Martinez" }
+              - column: { name: email, value: "carlos.martinez@example.com" }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: name, value: "Sofia Rodriguez" }
+              - column: { name: email, value: "sofia.rodriguez@example.com" }
+      rollback:
+        - delete:
+            tableName: users
+            where: "email in ('majo@example.com','pedro@example.com','ana@example.com','carlos.martinez@example.com','sofia.rodriguez@example.com')"
 ```
 
-### V5__Add_indexes_for_performance.sql
-```sql
--- Add indexes for better query performance
--- These support the common queries used by OutreachActionService
+### 0004-insert-sample-outreach-actions.yaml
+```yaml
+databaseChangeLog:
+  - changeSet:
+      id: 0004
+      author: majo
+      changes:
+        - insert:
+            tableName: outreach_action
+            columns:
+              - column: { name: user_id, valueNumeric: 1 }
+              - column: { name: type, value: "EMAIL" }
+              - column: { name: date_time, valueDate: "2025-01-01T09:00:00" }
+              - column: { name: notes, value: "Initial outreach to prospect ABC Corp" }
+        - insert:
+            tableName: outreach_action
+            columns:
+              - column: { name: user_id, valueNumeric: 1 }
+              - column: { name: type, value: "CONNECTION" }
+              - column: { name: date_time, valueDate: "2025-01-02T14:30:00" }
+              - column: { name: notes, value: "Connected on LinkedIn with decision maker" }
+        - insert:
+            tableName: outreach_action
+            columns:
+              - column: { name: user_id, valueNumeric: 1 }
+              - column: { name: type, value: "RESPONSE" }
+              - column: { name: date_time, valueDate: "2025-01-03T11:15:00" }
+              - column: { name: notes, value: "Received positive response, scheduling meeting" }
+        - insert:
+            tableName: outreach_action
+            columns:
+              - column: { name: user_id, valueNumeric: 1 }
+              - column: { name: type, value: "MEETING" }
+              - column: { name: date_time, valueDate: "2025-01-04T15:00:00" }
+              - column: { name: notes, value: "Demo call completed successfully" }
+        - insert:
+            tableName: outreach_action
+            columns:
+              - column: { name: user_id, valueNumeric: 2 }
+              - column: { name: type, value: "EMAIL" }
+              - column: { name: date_time, valueDate: "2025-01-01T10:00:00" }
+              - column: { name: notes, value: "Follow-up email to XYZ Inc" }
+        - insert:
+            tableName: outreach_action
+            columns:
+              - column: { name: user_id, valueNumeric: 2 }
+              - column: { name: type, value: "EMAIL" }
+              - column: { name: date_time, valueDate: "2025-01-02T16:00:00" }
+              - column: { name: notes, value: "Second follow-up with pricing information" }
+        - insert:
+            tableName: outreach_action
+            columns:
+              - column: { name: user_id, valueNumeric: 2 }
+              - column: { name: type, value: "MEETING" }
+              - column: { name: date_time, valueDate: "2025-01-05T13:00:00" }
+              - column: { name: notes, value: "Discovery call scheduled" }
+        - insert:
+            tableName: outreach_action
+            columns:
+              - column: { name: user_id, valueNumeric: 3 }
+              - column: { name: type, value: "CONNECTION" }
+              - column: { name: date_time, valueDate: "2025-01-01T08:30:00" }
+              - column: { name: notes, value: "LinkedIn outreach to startup founder" }
+        - insert:
+            tableName: outreach_action
+            columns:
+              - column: { name: user_id, valueNumeric: 3 }
+              - column: { name: type, value: "EMAIL" }
+              - column: { name: date_time, valueDate: "2025-01-02T09:45:00" }
+              - column: { name: notes, value: "Introductory email with company overview" }
+        - insert:
+            tableName: outreach_action
+            columns:
+              - column: { name: user_id, valueNumeric: 3 }
+              - column: { name: type, value: "RESPONSE" }
+              - column: { name: date_time, valueDate: "2025-01-03T12:00:00" }
+              - column: { name: notes, value: "Prospect showed interest in our solution" }
+      rollback:
+        - delete:
+            tableName: outreach_action
+            where: "notes in ('Initial outreach to prospect ABC Corp','Connected on LinkedIn with decision maker','Received positive response, scheduling meeting','Demo call completed successfully','Follow-up email to XYZ Inc','Second follow-up with pricing information','Discovery call scheduled','LinkedIn outreach to startup founder','Introductory email with company overview','Prospect showed interest in our solution')"
+```
 
--- Index for querying actions by user (used by getActionsByUserId)
-CREATE INDEX idx_outreach_action_user_id ON outreach_action(user_id);
-
--- Index for querying actions by date range (for future metrics features)
-CREATE INDEX idx_outreach_action_date_time ON outreach_action(date_time);
-
--- Index for querying actions by type (for future analytics)
-CREATE INDEX idx_outreach_action_type ON outreach_action(type);
-
--- Composite index for user + date queries (optimization for reporting)
-CREATE INDEX idx_outreach_action_user_date ON outreach_action(user_id, date_time);
-
--- Add comments
-COMMENT ON INDEX idx_outreach_action_user_id IS 'Optimizes queries filtering by user_id (supports getActionsByUserId)';
-COMMENT ON INDEX idx_outreach_action_date_time IS 'Optimizes date range queries for metrics calculations';
-COMMENT ON INDEX idx_outreach_action_type IS 'Optimizes queries filtering by action type';
-COMMENT ON INDEX idx_outreach_action_user_date IS 'Optimizes user-specific date range queries';
+### 0005-add-indexes-for-performance.yaml
+```yaml
+databaseChangeLog:
+  - changeSet:
+      id: 0005
+      author: majo
+      changes:
+        - createIndex:
+            tableName: outreach_action
+            indexName: idx_outreach_action_user_id
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: outreach_action
+            indexName: idx_outreach_action_date_time
+            columns:
+              - column:
+                  name: date_time
+        - createIndex:
+            tableName: outreach_action
+            indexName: idx_outreach_action_type
+            columns:
+              - column:
+                  name: type
+        - createIndex:
+            tableName: outreach_action
+            indexName: idx_outreach_action_user_date
+            columns:
+              - column:
+                  name: user_id
+              - column:
+                  name: date_time
+      rollback:
+        - dropIndex:
+            tableName: outreach_action
+            indexName: idx_outreach_action_user_id
+        - dropIndex:
+            tableName: outreach_action
+            indexName: idx_outreach_action_date_time
+        - dropIndex:
+            tableName: outreach_action
+            indexName: idx_outreach_action_type
+        - dropIndex:
+            tableName: outreach_action
+            indexName: idx_outreach_action_user_date
 ```
 
 ## Integration with Current API Structure
-- These scripts create the database schema that supports the current API structure
+- These Liquibase changesets create the database schema that supports the current API structure
 - Data inserted will be returned via `OutreachActionResponse`, `OutreachActionDetailResponse`, etc.
 - The schema supports all current endpoints in `OutreachActionController` and `UserController`
 - Indexes are optimized for current query patterns in `OutreachActionService`
+- All changesets include rollback support for safe database evolution
+
+## Key Benefits of Liquibase Approach
+- **Database Agnostic**: Works with H2, PostgreSQL, and other databases
+- **Version Control**: Changes tracked in YAML format with clear versioning
+- **Rollback Support**: Each changeset includes rollback operations
+- **Spring Boot Integration**: Automatic execution on application startup
+- **Validation**: Built-in validation of changeset integrity

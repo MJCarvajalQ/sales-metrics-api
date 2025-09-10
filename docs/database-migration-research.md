@@ -66,32 +66,35 @@
 - Complex migration requirements
 - Teams needing advanced rollback capabilities
 
-## Tool Recommendation: **Flyway**
+## Tool Recommendation: **Liquibase**
 
 ### Justification
 
-For the Sales Metrics API project, **Flyway is the recommended choice** based on:
+For the Sales Metrics API project, **Liquibase is the recommended choice** based on mentor guidance and the following considerations:
 
 1. **Project Characteristics:**
-   - Single database target (PostgreSQL for production)
-   - Relatively simple schema
-   - Small development team
-   - Focus on rapid development
+   - Database portability (H2 dev, PostgreSQL prod)
+   - Need for reliable rollback capabilities
+   - Spring Boot 3.5.3 excellent Liquibase integration
+   - Future scalability requirements
 
 2. **Team Considerations:**
-   - SQL-first approach aligns with typical Spring Boot development
-   - Minimal learning curve
-   - Excellent Spring Boot integration
+   - Mentor recommendation based on industry best practices
+   - Better long-term maintainability
+   - Strong Spring Boot auto-configuration
+   - Comprehensive documentation and tooling
 
 3. **Technical Benefits:**
-   - Lightweight and performant
-   - Simple version control integration
-   - Clear migration file naming convention
-   - Extensive community support
+   - Database-agnostic changesets
+   - Built-in rollback support without paid licenses
+   - Advanced change tracking and validation
+   - Support for complex migration scenarios
+   - Better integration with CI/CD pipelines
 
-4. **Cost-Effectiveness:**
-   - Free version covers project needs
-   - Rollback can be handled with manual scripts for simple schema
+4. **Future-Proofing:**
+   - Industry standard for enterprise applications
+   - Better support for complex schema evolution
+   - Extensive plugin ecosystem
 
 ## Production Database Recommendation: **PostgreSQL**
 
@@ -107,7 +110,7 @@ For the Sales Metrics API project, **Flyway is the recommended choice** based on
 
 2. **Ecosystem Compatibility:**
    - Excellent Spring Boot/JPA support
-   - Strong Flyway integration
+   - Strong Liquibase integration
    - Wide adoption in Spring ecosystem
 
 3. **Future-Proofing:**
@@ -118,16 +121,16 @@ For the Sales Metrics API project, **Flyway is the recommended choice** based on
 ## Migration Strategy Overview
 
 ### Phase 1: Tool Integration (Week 1)
-1. Add Flyway dependency to project
-2. Configure Flyway in application properties
-3. Create initial migration structure
+1. Add Liquibase dependency to project
+2. Configure Liquibase in application properties
+3. Create initial changelog structure
 4. Test with current H2 setup
 
 ### Phase 2: Schema Migrations (Week 1-2)
-1. Create baseline migration for existing schema
-2. Develop migration scripts for current entities
-3. Add sample data migration
-4. Test migration rollback procedures
+1. Create baseline changelog for existing schema
+2. Develop changesets for current entities
+3. Add sample data changesets
+4. Test changeset rollback procedures
 
 ### Phase 3: Production Database Setup (Week 2-3)
 1. Set up PostgreSQL development environment
@@ -144,16 +147,16 @@ For the Sales Metrics API project, **Flyway is the recommended choice** based on
 ## Next Steps
 
 1. **Immediate Actions:**
-   - Add Flyway dependency to pom.xml
-   - Create migration directory structure
-   - Configure Flyway properties
+   - Add Liquibase dependency to pom.xml
+   - Create changelog directory structure (src/main/resources/db/changelog/)
+   - Configure Liquibase properties in application.yml
 
 2. **Short-term Goals:**
-   - Implement baseline migrations
+   - Implement baseline changesets in YAML format
    - Set up PostgreSQL development environment
-   - Create sample migration scripts
+   - Create sample changelog files with rollback support
 
 3. **Long-term Considerations:**
-   - Establish migration review process
-   - Plan for production deployment
-   - Consider CI/CD integration for automated migrations
+   - Establish changeset review process
+   - Plan for production deployment with Liquibase
+   - Consider CI/CD integration for automated Liquibase migrations
