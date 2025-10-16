@@ -2,7 +2,7 @@ package com.mjcarvajalq.sales_metrics_api.mappers;
 
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionRequest;
 import com.mjcarvajalq.sales_metrics_api.dto.CreateOutreachActionResponse;
-import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDTO;
+import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionResponse;
 import com.mjcarvajalq.sales_metrics_api.dto.OutreachActionDetailResponse;
 import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
 import com.mjcarvajalq.sales_metrics_api.model.User;
@@ -15,9 +15,10 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface OutreachActionMapper {
 
-    OutreachActionDTO toDTO(OutreachAction entity);
+    @Mapping(target = "userId", source = "user.id")
+    OutreachActionResponse toResponse(OutreachAction entity);
 
-    List<OutreachActionDTO> toDTOList(List<OutreachAction> entities);
+    List<OutreachActionResponse> toResponseList(List<OutreachAction> entities);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "dateTime", source = "request.dateTime")
