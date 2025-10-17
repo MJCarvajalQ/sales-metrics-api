@@ -91,6 +91,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Liquibase: Database schema versioning and migration -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+
         <!-- ================================ -->
         <!-- VALIDATION DEPENDENCIES         -->
         <!-- ================================ -->

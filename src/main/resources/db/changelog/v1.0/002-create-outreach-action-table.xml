@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <changeSet id="002-create-outreach-action-table" author="mjcarvajal">
+        <comment>Create outreach_action table for storing sales outreach activities</comment>
+        
+        <createTable tableName="outreach_action">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="date_time" type="TIMESTAMP">
+                <constraints nullable="true"/>
+            </column>
+            <column name="notes" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        
+        <!-- Add foreign key constraint -->
+        <addForeignKeyConstraint
+            baseTableName="outreach_action"
+            baseColumnNames="user_id"
+            constraintName="fk_outreach_action_user_id"
+            referencedTableName="users"
+            referencedColumnNames="id"/>
+        
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="outreach_action" constraintName="fk_outreach_action_user_id"/>
+            <dropTable tableName="outreach_action"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
