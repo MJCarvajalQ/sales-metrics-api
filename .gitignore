@@ -101,10 +101,10 @@ local.properties
 application-dev.properties
 application-prod.properties
 application-local.properties
-application-test.properties
 application-*.yml
 !application.yml
 !application.properties
+!application-test.properties
 
 # Spring Boot DevTools
 .springBeans

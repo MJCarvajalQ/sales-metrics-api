@@ -73,6 +73,7 @@ This application allows users to track their sales outreach activities (emails, 
 ### Prerequisites
 - Java 17 or higher
 - Maven 3.6+
+- PostgreSQL 12+ (for production) or Docker (for local development)
 - IDE with Lombok support (IntelliJ IDEA, VS Code with Lombok extension, etc.)
 
 ### Running the Application
@@ -81,23 +82,57 @@ This application allows users to track their sales outreach activities (emails, 
    ```bash
    git clone https://github.com/MJCarvajalQ/sales-metrics-api.git
    cd sales-metrics-api
+   ```
 
-2. **Run the application:**
+2. **Set up environment variables:**
+   
+   Create a `.env` file or set the following environment variables:
+   ```bash
+   export DB_URL=jdbc:postgresql://localhost:5432/sales_metrics
+   export DB_USERNAME=your_username
+   export DB_PASSWORD=your_password
+   ```
+   
+   Or use default values (for local development):
+   ```bash
+   export DB_URL=jdbc:postgresql://localhost:5432/sales_metrics
+   export DB_USERNAME=sales_user
+   export DB_PASSWORD=sales_password
+   ```
 
+3. **Set up PostgreSQL database:**
+   
+   Make sure PostgreSQL is running and create the database:
+   ```sql
+   CREATE DATABASE sales_metrics;
+   CREATE USER sales_user WITH ENCRYPTED PASSWORD 'sales_password';
+   GRANT ALL PRIVILEGES ON DATABASE sales_metrics TO sales_user;
+   ```
+
+4. **Run the application:**
    ```bash
    mvn spring-boot:run
    ```
 
-3. **Access the application:**
+5. **Access the application:**
+   * API Base URL: `http://localhost:8080`
 
-    * API Base URL: `http://localhost:8080`
-    * H2 Database Console: `http://localhost:8080/h2-console`
+### Environment Variables
 
-        * JDBC URL: `jdbc:h2:mem:testdb`
-        * Username: `sa`
-        * Password: (leave empty)
+The application requires the following environment variables for database configuration:
 
-ℹ️ You can read more about [H2 Console usage here](https://www.h2database.com/html/main.html).
+| Variable | Description | Default Value |
+|----------|-------------|---------------|
+| `DB_URL` | PostgreSQL database URL | `jdbc:postgresql://localhost:5432/sales_metrics` |
+| `DB_USERNAME` | Database username | `sales_user` |
+| `DB_PASSWORD` | Database password | `sales_password` |
+
+### Testing
+
+Tests use H2 in-memory database and don't require PostgreSQL setup:
+```bash
+mvn test
+```
 
 ## API Testing
 
@@ -195,7 +230,7 @@ The application loads test data on startup:
 ## Technology Stack
 
 * **Backend**: Spring Boot 3.5.3
-* **Database**: H2 (development), PostgreSQL (production planned)
+* **Database**: PostgreSQL (production), H2 (testing)
 * **ORM**: Spring Data JPA
 * **Build Tool**: Maven
 * **Java Version**: 17
