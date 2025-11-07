@@ -98,13 +98,15 @@ local.properties
 # SPRING BOOT SPECIFIC
 # ================================
 # Spring Boot application properties (keep templates, ignore environment-specific)
-application-dev.properties
-application-prod.properties
+# Note: application-dev.properties and application-prod.properties are now tracked
+# as they contain environment variable placeholders, not actual secrets
 application-local.properties
 application-*.yml
 !application.yml
 !application.properties
 !application-test.properties
+!application-dev.properties
+!application-prod.properties
 
 # Spring Boot DevTools
 .springBeans

@@ -84,48 +84,100 @@ This application allows users to track their sales outreach activities (emails, 
    cd sales-metrics-api
    ```
 
-2. **Set up environment variables:**
-   
-   Create a `.env` file or set the following environment variables:
-   ```bash
-   export DB_URL=jdbc:postgresql://localhost:5432/sales_metrics
-   export DB_USERNAME=your_username
-   export DB_PASSWORD=your_password
-   ```
-   
-   Or use default values (for local development):
-   ```bash
-   export DB_URL=jdbc:postgresql://localhost:5432/sales_metrics
-   export DB_USERNAME=sales_user
-   export DB_PASSWORD=sales_password
-   ```
-
-3. **Set up PostgreSQL database:**
+2. **Set up PostgreSQL database:**
    
    Make sure PostgreSQL is running and create the database:
+   
+   **For Development (default):**
+   ```sql
+   CREATE DATABASE sales_metrics_dev;
+   CREATE USER sales_user WITH ENCRYPTED PASSWORD 'sales_password';
+   GRANT ALL PRIVILEGES ON DATABASE sales_metrics_dev TO sales_user;
+   ```
+   
+   **For Production:**
    ```sql
    CREATE DATABASE sales_metrics;
    CREATE USER sales_user WITH ENCRYPTED PASSWORD 'sales_password';
    GRANT ALL PRIVILEGES ON DATABASE sales_metrics TO sales_user;
    ```
 
-4. **Run the application:**
+3. **Run the application:**
+   
+   **Development (with defaults):**
    ```bash
-   mvn spring-boot:run
+   mvn spring-boot:run -Dspring-boot.run.profiles=dev
+   ```
+   
+   **Production (requires environment variables):**
+   ```bash
+   mvn spring-boot:run -Dspring-boot.run.profiles=prod
    ```
 
-5. **Access the application:**
+4. **Access the application:**
    * API Base URL: `http://localhost:8080`
 
 ### Environment Variables
 
-The application requires the following environment variables for database configuration:
+The application uses environment variables for database configuration. Different profiles use different strategies:
 
-| Variable | Description | Default Value |
-|----------|-------------|---------------|
-| `DB_URL` | PostgreSQL database URL | `jdbc:postgresql://localhost:5432/sales_metrics` |
-| `DB_USERNAME` | Database username | `sales_user` |
-| `DB_PASSWORD` | Database password | `sales_password` |
+#### Development Profile (`dev`)
+- Uses environment variables with safe defaults
+- Default database: `sales_metrics_dev`
+- Default credentials: `sales_user` / `sales_password`
+- Data seeding is enabled by default
+
+#### Production Profile (`prod`)
+- **REQUIRES** all environment variables to be set
+- No default values for security
+- Must set: `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`
+- Data seeding is disabled
+
+#### Required Environment Variables
+
+| Variable | Description | Required in Prod | Default (Dev) |
+|----------|-------------|------------------|---------------|
+| `DB_URL` | PostgreSQL database URL | ✅ Yes | `jdbc:postgresql://localhost:5432/sales_metrics_dev` |
+| `DB_USERNAME` | Database username | ✅ Yes | `sales_user` |
+| `DB_PASSWORD` | Database password | ✅ Yes | `sales_password` |
+
+#### Setting Environment Variables
+
+**Option 1: Export in terminal (macOS/Linux)**
+```bash
+export DB_URL=jdbc:postgresql://localhost:5432/sales_metrics_dev
+export DB_USERNAME=your_username
+export DB_PASSWORD=your_password
+```
+
+**Option 2: IntelliJ Run Configuration**
+1. Run → Edit Configurations
+2. Select your Spring Boot configuration
+3. Environment variables → Add:
+   - `DB_URL=jdbc:postgresql://localhost:5432/sales_metrics_dev`
+   - `DB_USERNAME=your_username`
+   - `DB_PASSWORD=your_password`
+4. Active profiles → Add: `dev` or `prod`
+
+**Option 3: Create `.env` file (IntelliJ built-in support)**
+Create a `.env` file in the project root (already in `.gitignore`):
+```
+DB_URL=jdbc:postgresql://localhost:5432/sales_metrics_dev
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+#### Running with Profiles
+
+**Development:**
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+**Production:**
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=prod
+```
 
 ### Testing
 

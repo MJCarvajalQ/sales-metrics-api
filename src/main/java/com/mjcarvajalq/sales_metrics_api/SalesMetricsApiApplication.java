@@ -5,10 +5,13 @@ import com.mjcarvajalq.sales_metrics_api.model.OutreachAction;
 import com.mjcarvajalq.sales_metrics_api.model.User;
 import com.mjcarvajalq.sales_metrics_api.repositories.OutreachActionRepository;
 import com.mjcarvajalq.sales_metrics_api.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDateTime;
 
@@ -20,8 +23,26 @@ public class SalesMetricsApiApplication {
 	}
 
 	@Bean
-	public CommandLineRunner dataLoader(UserRepository userRepo, OutreachActionRepository actionRepo) {
+	@Profile("!prod")  // Only run in non-production environments
+	@ConditionalOnProperty(name = "app.data.seeding.enabled", havingValue = "true", matchIfMissing = true)
+	public CommandLineRunner dataLoader(
+			UserRepository userRepo,
+			OutreachActionRepository actionRepo,
+			@Value("${app.data.seeding.enabled:true}") boolean seedingEnabled
+	) {
 		return args -> {
+			if (!seedingEnabled) {
+				System.out.println("Data seeding is disabled.");
+				return;
+			}
+
+			// Check if data already exists (idempotent check)
+			if (userRepo.count() > 0) {
+				System.out.println("Data already exists. Skipping seeding.");
+				return;
+			}
+
+			// Seed users
 			User user1 = new User();
 			user1.setName("Majo");
 			user1.setEmail("majo@example.com");
@@ -33,6 +54,7 @@ public class SalesMetricsApiApplication {
 			userRepo.save(user1);
 			userRepo.save(user2);
 
+			// Seed actions
 			OutreachAction action1 = new OutreachAction();
 			action1.setUser(user1);
 			action1.setType(ActionType.EMAIL);
