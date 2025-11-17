@@ -73,7 +73,8 @@ This application allows users to track their sales outreach activities (emails, 
 ### Prerequisites
 - Java 17 or higher
 - Maven 3.6+
-- PostgreSQL 12+ (for production) or Docker (for local development)
+- Docker and Docker Compose (for local development)
+- PostgreSQL 12+ (for production deployment)
 - IDE with Lombok support (IntelliJ IDEA, VS Code with Lombok extension, etc.)
 
 ### Running the Application
@@ -84,30 +85,62 @@ This application allows users to track their sales outreach activities (emails, 
    cd sales-metrics-api
    ```
 
-2. **Set up PostgreSQL database:**
+2. **Set up PostgreSQL database using Docker Compose (Recommended for local development):**
    
-   Make sure PostgreSQL is running and create the database:
+   Start PostgreSQL and pgAdmin using Docker Compose:
+   ```bash
+   docker-compose up -d
+   ```
    
-   **For Development (default):**
+   This will start:
+   - PostgreSQL 15 on port `5432`
+   - pgAdmin 4 on port `5050` (optional database management tool)
+   
+   The database is automatically configured with:
+   - Database: `sales_metrics_dev`
+   - User: `sales_user`
+   - Password: `sales_password`
+   - Data persists in Docker volumes between restarts
+   
+   **Optional: Access pgAdmin**
+   - Open http://localhost:5050
+   - Login with:
+     - Email: `admin@salesmetrics.local`
+     - Password: `admin`
+   - Add a new server with:
+     - Host: `postgres` (container name)
+     - Port: `5432`
+     - Database: `sales_metrics_dev`
+     - Username: `sales_user`
+     - Password: `sales_password`
+   
+   **Stop the database:**
+   ```bash
+   docker-compose down
+   ```
+   
+   **Stop and remove volumes (clean slate):**
+   ```bash
+   docker-compose down -v
+   ```
+   
+   **Alternative: Manual PostgreSQL setup**
+   
+   If you prefer not to use Docker, you can set up PostgreSQL manually:
    ```sql
    CREATE DATABASE sales_metrics_dev;
    CREATE USER sales_user WITH ENCRYPTED PASSWORD 'sales_password';
    GRANT ALL PRIVILEGES ON DATABASE sales_metrics_dev TO sales_user;
    ```
-   
-   **For Production:**
-   ```sql
-   CREATE DATABASE sales_metrics;
-   CREATE USER sales_user WITH ENCRYPTED PASSWORD 'sales_password';
-   GRANT ALL PRIVILEGES ON DATABASE sales_metrics TO sales_user;
-   ```
 
 3. **Run the application:**
    
-   **Development (with defaults):**
+   **Development (with defaults - works with Docker Compose):**
    ```bash
    mvn spring-boot:run -Dspring-boot.run.profiles=dev
    ```
+   
+   The application will automatically connect to the Docker Compose PostgreSQL instance.
    
    **Production (requires environment variables):**
    ```bash
@@ -181,10 +214,94 @@ mvn spring-boot:run -Dspring-boot.run.profiles=prod
 
 ### Testing
 
+**Unit/Integration Tests:**
 Tests use H2 in-memory database and don't require PostgreSQL setup:
 ```bash
 mvn test
 ```
+
+**Docker Compose Testing:**
+
+**Automated Testing (Recommended):**
+Run the automated test script to verify everything works:
+```bash
+./test-docker-connection.sh
+```
+
+This script will:
+- Verify Docker and Docker Compose are installed
+- Start Docker Compose services
+- Check PostgreSQL container is running
+- Test database connection
+- Verify database and user exist
+- Test data persistence across restarts
+- Verify pgAdmin service
+
+**Manual Testing:**
+If you prefer to test manually, follow these steps:
+
+1. **Start Docker Compose:**
+   ```bash
+   docker-compose up -d
+   # Or with Docker Compose v2:
+   docker compose up -d
+   ```
+
+2. **Verify PostgreSQL is running:**
+   ```bash
+   docker-compose ps
+   # Or:
+   docker compose ps
+   ```
+   You should see both `postgres` and `pgadmin` services running.
+
+3. **Check PostgreSQL logs:**
+   ```bash
+   docker-compose logs postgres
+   ```
+   Look for "database system is ready to accept connections".
+
+4. **Test database connection:**
+   ```bash
+   docker-compose exec postgres psql -U sales_user -d sales_metrics_dev -c "SELECT version();"
+   ```
+   This should display the PostgreSQL version.
+
+5. **Run the application and verify connection:**
+   ```bash
+   mvn spring-boot:run -Dspring-boot.run.profiles=dev
+   ```
+   The application should:
+   - Connect successfully to the Docker Compose PostgreSQL instance
+   - Show no connection errors in logs
+   - Start Liquibase migrations automatically
+   - Seed initial data (if enabled)
+   
+   **Verify in application logs:**
+   - Look for "Liquibase changelog" messages
+   - Check for "Test users and actions seeded successfully" (if seeding enabled)
+   - Ensure no database connection errors
+
+6. **Test data persistence:**
+   - Start the application and create some data via API
+   - Stop the application: `Ctrl+C`
+   - Stop Docker Compose: `docker-compose down`
+   - Start Docker Compose again: `docker-compose up -d`
+   - Start the application again
+   - Verify data is still there (use API to retrieve it)
+
+7. **Access pgAdmin (optional):**
+   - Open http://localhost:5050
+   - Login with:
+     - Email: `admin@salesmetrics.local`
+     - Password: `admin`
+   - Add server:
+     - Host: `postgres`
+     - Port: `5432`
+     - Database: `sales_metrics_dev`
+     - Username: `sales_user`
+     - Password: `sales_password`
+   - Verify you can see the database and tables created by Liquibase
 
 ## API Testing
 
