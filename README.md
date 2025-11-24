@@ -222,23 +222,7 @@ mvn test
 
 **Docker Compose Testing:**
 
-**Automated Testing (Recommended):**
-Run the automated test script to verify everything works:
-```bash
-./test-docker-connection.sh
-```
-
-This script will:
-- Verify Docker and Docker Compose are installed
-- Start Docker Compose services
-- Check PostgreSQL container is running
-- Test database connection
-- Verify database and user exist
-- Test data persistence across restarts
-- Verify pgAdmin service
-
-**Manual Testing:**
-If you prefer to test manually, follow these steps:
+To verify your Docker Compose setup is working correctly, follow these steps:
 
 1. **Start Docker Compose:**
    ```bash
